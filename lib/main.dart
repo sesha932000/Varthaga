@@ -82,7 +82,7 @@ class _PubState extends State<Pub> {
                   TextFormField(
                     controller: _username,
                     decoration: const InputDecoration(
-                      labelText: "Full Name",
+                      labelText: " Name",
                       border: OutlineInputBorder(),
                     ),
                     validator: (value) {
