@@ -52,7 +52,7 @@ class Pub extends StatefulWidget {
 // }
 
 class _PubState extends State<Pub> {
-  DataModel _dataModel;
+  // DataModel _dataModel;
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
   final TextEditingController _pass = TextEditingController();
   final TextEditingController _email = TextEditingController();
@@ -320,20 +320,20 @@ class _PubState extends State<Pub> {
                       onPressed: () async{
                         if (_formkey.currentState!.validate()) {
                           _formkey.currentState?.save();
-                          String name=_name.text;
-                          String userName=_username.text;
-                        String mobile=_mobilenumber.text;
-                        String email=_email.text;
-                        String password=_pass.text;
-                        String passwordConfirmation=_confirmPass.text;
-                        String gender=_gender.text;
-                        String referalCode=_refrral.text;
-
-                          DataModel data= await submitData(name, userName, mobile, email, password, passwordConfirmation, gender, referalCode);
-
-                          setState(() {
-                            _dataModel= data;
-                          });
+                        //   String name=_name.text;
+                        //   String userName=_username.text;
+                        // String mobile=_mobilenumber.text;
+                        // String email=_email.text;
+                        // String password=_pass.text;
+                        // String passwordConfirmation=_confirmPass.text;
+                        // String gender=_gender.text;
+                        // String referalCode=_refrral.text;
+                        //
+                        //   DataModel data= await submitData(name, userName, mobile, email, password, passwordConfirmation, gender, referalCode);
+                        //
+                        //   setState(() {
+                        //     _dataModel= data;
+                        //   });
 
 
                           // _register();
