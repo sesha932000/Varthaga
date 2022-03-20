@@ -2,13 +2,14 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:reffralacc/login.dart';
-import 'package:reffralacc/api.dart';
+import 'api.dart';
+import 'package:http/http.dart' as http;
 import 'home.dart';
 import 'package:reffralacc/splashscreen.dart';
 
 
 void main() {
-  runApp(const MaterialApp(debugShowCheckedModeBanner: false, home:splash()
+  runApp(const MaterialApp(debugShowCheckedModeBanner: false, home: splash()
   ),
   );
 }
@@ -20,36 +21,70 @@ class Pub extends StatefulWidget {
   State<Pub> createState() => _PubState();
 }
 
+// Future<Welcome> submitData(
+//     String name,
+//     String userName,
+//     String mobile,
+//     String email,
+//     String password,
+//     String passwordConfirmation,
+//     String gender,
+//     String referalCode,) async {
+//   var response = await http.post(Uri.https('varthaga.com', 'api/register'),
+//       body: { "name": name,
+//         "user_name": userName,
+//         "mobile": mobile,
+//         "email": email,
+//         "password": password,
+//         "password_confirmation": passwordConfirmation,
+//         "gender": gender,
+//         "referal_code": referalCode,
+//
+//       });
+//   var data =response.body;
+//   print(data);
+//
+//
+//   if(response.statusCode==201){
+//     String responseString =response.body;
+//     dataModelFromJson(responseString);
+//   }
+// }
+
 class _PubState extends State<Pub> {
-  final GlobalKey<FormState> _key = GlobalKey<FormState>();
+  DataModel _dataModel;
+  final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
   final TextEditingController _pass = TextEditingController();
   final TextEditingController _email = TextEditingController();
   final TextEditingController _confirmPass = TextEditingController();
   final TextEditingController _username = TextEditingController();
   final TextEditingController _mobilenumber = TextEditingController();
   final TextEditingController _refrral = TextEditingController();
+  final TextEditingController _name = TextEditingController();
+  final TextEditingController _gender = TextEditingController();
 
-  _register() {
-    var data = {
-      'name': _username.text,
-      'password': _pass.text,
-      'email': _email.text,
-      'confirmpassword': _confirmPass.text,
-      'mobilenumber': _mobilenumber.text,
-      'refrral': _refrral.text,
-    };
-    var res = CallApi().postData(data, '_register');
-    log('data: $data');
-    var body = json.decode(res.body);
-    if (body['success']) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (BuildContext context) => const HomePage(),
-        ),
-      );
-    }
-  }
+  // _register() {
+  //   var data = {
+  //     'name': _username.text,
+  //     'password': _pass.text,
+  //     'email': _email.text,
+  //     'confirmpassword': _confirmPass.text,
+  //     'mobilenumber': _mobilenumber.text,
+  //     'refrral': _refrral.text,
+  //   };
+  //   var res = CallApi().postData(data, '_register');
+  //   log('data: $data');
+  //   var body = json.decode(res.body);
+  //   if (body['success']) {
+  //     Navigator.push(
+  //       context,
+  //       MaterialPageRoute(
+  //         builder: (BuildContext context) => const HomePage(),
+  //       ),
+  //     );
+  //   }
+  // }
+  late int? _value = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -58,9 +93,10 @@ class _PubState extends State<Pub> {
         backgroundColor: Colors.white,
         body: SingleChildScrollView(
           padding: const EdgeInsets.all(20.0),
+
           child: Center(
             child: Form(
-              key: _key,
+              key: _formkey,
               child: Column(
                 children: [
                   const SizedBox(
@@ -79,24 +115,91 @@ class _PubState extends State<Pub> {
                   const SizedBox(
                     height: 20,
                   ),
+
+                  ////////////////          Name           //////////////
+
                   TextFormField(
-                    controller: _username,
+                    controller: _name,
                     decoration: const InputDecoration(
                       labelText: " Name",
                       border: OutlineInputBorder(),
                     ),
                     validator: (value) {
-                      if (value == null || value.trim().isEmpty) {
+                      if (value == null || value
+                          .trim()
+                          .isEmpty) {
                         return "Field is required.";
                       }
-                      if (value.trim().length < 4) {
+                      if (value
+                          .trim()
+                          .length < 4) {
                         return 'Username must be at least 4 characters in length';
                       }
                       return null;
                     },
                   ),
 
-                  //////////////NUMBER//////////////
+                  const SizedBox(
+                    height: 10,
+                  ),
+
+                  ///////////////        User Name         /////////////////
+
+                  TextFormField(
+                    controller: _username,
+                    decoration: const InputDecoration(
+                      labelText: " UserName",
+                      border: OutlineInputBorder(),
+                    ),
+                    validator: (value) {
+                      if (value == null || value
+                          .trim()
+                          .isEmpty) {
+                        return "Field is required.";
+                      }
+                      if (value
+                          .trim()
+                          .length < 4) {
+                        return 'Username must be at least 4 characters in length';
+                      }
+                      return null;
+                    },
+                  ),
+
+                  ///////////////    Radio Button      //////////////////
+
+                  Row(
+
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Radio(
+                        value: 1,
+                        groupValue: _value,
+                        onChanged: (value) {
+                          controller: _gender;
+                          setState(() {
+                            _value = value as int?;
+                          });
+                        },
+                      ),
+                      const Text("Male"),
+                      SizedBox(width: 30.0,),
+
+                      Radio(
+                        value: 2,
+                        groupValue: _value,
+                        onChanged: (value) {
+                          setState(() {
+                            _value = value as int?;
+                          });
+                        },
+                      ),
+                      const Text("Female"),
+                    ],
+                  ),
+
+
+                  //////////////      NUMBER        //////////////
                   const SizedBox(
                     height: 10,
                   ),
@@ -119,7 +222,7 @@ class _PubState extends State<Pub> {
                     },
                   ),
 
-                  /////////EMAIL ADDRESS/////////
+                  /////////         EMAIL ADDRESS      /////////
                   const SizedBox(
                     height: 10,
                   ),
@@ -141,14 +244,14 @@ class _PubState extends State<Pub> {
                     },
                   ),
 
-                  //////////PASSWORD////////
+                  //////////     PASSWORD           ////////
 
                   const SizedBox(
                     height: 10,
                   ),
 
                   TextFormField(
-                      ////////////HIDE PASSWORD/////////
+                    ////////////       HIDE PASSWORD          /////////
                       obscureText: true,
                       decoration: const InputDecoration(
                         labelText: "Password",
@@ -170,7 +273,7 @@ class _PubState extends State<Pub> {
                         return null;
                       }),
 
-                  ////////////////// ConfirmPassword//////////////
+                  //////////////////       ConfirmPassword        //////////////
                   const SizedBox(
                     height: 10,
                   ),
@@ -190,7 +293,7 @@ class _PubState extends State<Pub> {
                     },
                   ),
 
-                  ////////////Referral/////////
+                  ////////////         Referral      /////////
                   const SizedBox(
                     height: 10,
                   ),
@@ -214,15 +317,31 @@ class _PubState extends State<Pub> {
                       child: const Text(
                         "Submit",
                       ),
-                      onPressed: () {
-                        if (_key.currentState!.validate()) {
-                          _key.currentState?.save();
-                            _register();
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const LoginPage()),
-                            );
+                      onPressed: () async{
+                        if (_formkey.currentState!.validate()) {
+                          _formkey.currentState?.save();
+                          String name=_name.text;
+                          String userName=_username.text;
+                        String mobile=_mobilenumber.text;
+                        String email=_email.text;
+                        String password=_pass.text;
+                        String passwordConfirmation=_confirmPass.text;
+                        String gender=_gender.text;
+                        String referalCode=_refrral.text;
+
+                          DataModel data= await submitData(name, userName, mobile, email, password, passwordConfirmation, gender, referalCode);
+
+                          setState(() {
+                            _dataModel= data;
+                          });
+
+
+                          // _register();
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const LoginPage()),
+                          );
                         }
                       },
                     ),

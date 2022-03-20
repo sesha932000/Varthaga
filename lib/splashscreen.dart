@@ -12,12 +12,14 @@ class splash extends StatelessWidget {
 
   Widget build(BuildContext context) {
     Widget example1 = SplashScreenView(
+
       navigateRoute: const Pub(),
       duration: 3000,
       text: "Varthaga",
       textType: TextType.ColorizeAnimationText,
       textStyle: const TextStyle(
         fontSize: 40.0,
+
       ),
       colors: const [
         Colors.purple,
@@ -25,7 +27,7 @@ class splash extends StatelessWidget {
         Colors.yellow,
         Colors.red,
       ],
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.black,
     );
 
     return MaterialApp(
